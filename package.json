@@ -1,0 +1,23 @@
+{
+  "name": "excel",
+  "version": "1.0.0",
+  "description": "Pure Javascript Excel app",
+  "main": "webpack.config.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Flunt1k/excel.git"
+  },
+  "keywords": [
+    "Javascript",
+    "excel"
+  ],
+  "author": "Vladimir Chernitsyn <chvp00@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Flunt1k/excel/issues"
+  },
+  "homepage": "https://github.com/Flunt1k/excel#readme"
+}
