@@ -5,6 +5,10 @@ class Dom {
         selector
   }
 
+  get data() {
+    return this.$element.dataset
+  }
+
   html(html) {
     if (typeof html === 'string') {
       this.$element.innerHTML = html
@@ -35,6 +39,24 @@ class Dom {
     } else {
       this.$element.appendChild(node)
     }
+  }
+
+  closest(selector) {
+    return $(this.$element.closest(selector))
+  }
+
+  getCoords() {
+    return this.$element.getBoundingClientRect()
+  }
+
+  findAll(selector) {
+    return this.$element.querySelectorAll(selector)
+  }
+
+  css(styles = {}) {
+    Object.keys(styles).forEach(key => {
+      this.$element.style[key] = styles[key]
+    })
   }
 }
 
