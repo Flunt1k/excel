@@ -53,10 +53,52 @@ class Dom {
     return this.$element.querySelectorAll(selector)
   }
 
+  find(selector) {
+    return $(this.$element.querySelector(selector))
+  }
+
+  setClass(className) {
+    this.$element.classList.add(className)
+    return this
+  }
+
+  removeClass(className) {
+    this.$element.classList.remove(className)
+    return this
+  }
+
   css(styles = {}) {
     Object.keys(styles).forEach(key => {
       this.$element.style[key] = styles[key]
     })
+  }
+
+  id(parse) {
+    if (parse) {
+      const id = this.id()
+      const parse = id.split(':')
+      return {
+        row: +parse[0],
+        col: +parse[1],
+      }
+    }
+    return this.data.id
+  }
+
+  focus() {
+    this.$element.focus()
+    return this
+  }
+
+  text(text) {
+    if (typeof text === 'string') {
+      this.$element.textContent = text
+      return this
+    }
+    if (this.$element.tagName.toUpperCase() === 'input') {
+      return this.$element.value.trim()
+    }
+    return this.$element.textContent.trim()
   }
 }
 
