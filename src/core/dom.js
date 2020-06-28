@@ -1,20 +1,31 @@
 class Dom {
   constructor(selector) {
-    this.$element = typeof selector === 'string' ?
+    this.$el = typeof selector === 'string' ?
         document.querySelector(selector) :
         selector
   }
 
   get data() {
-    return this.$element.dataset
+    return this.$el.dataset
   }
 
   html(html) {
     if (typeof html === 'string') {
-      this.$element.innerHTML = html
+      this.$el.innerHTML = html
       return this
     }
-    return this.$element.outerHTML.trim()
+    return this.$el.outerHTML.trim()
+  }
+
+  text(text) {
+    if (typeof text !== 'undefined') {
+      this.$el.textContent = text
+      return this
+    }
+    if (this.$el.tagName.toLowerCase() === 'input') {
+      return this.$el.value.trim()
+    }
+    return this.$el.textContent.trim()
   }
 
   clear() {
@@ -23,82 +34,88 @@ class Dom {
   }
 
   on(eventType, callback) {
-    this.$element.addEventListener(eventType, callback)
+    this.$el.addEventListener(eventType, callback)
   }
 
   off(eventType, callback) {
-    this.$element.removeEventListener(eventType, callback)
+    this.$el.removeEventListener(eventType, callback)
+  }
+
+  find(selector) {
+    return $(this.$el.querySelector(selector))
   }
 
   append(node) {
     if (node instanceof Dom) {
-      node = node.$element
+      node = node.$el
     }
+
     if (Element.prototype.append) {
-      this.$element.append(node)
+      this.$el.append(node)
     } else {
-      this.$element.appendChild(node)
+      this.$el.appendChild(node)
     }
+
+    return this
   }
 
   closest(selector) {
-    return $(this.$element.closest(selector))
+    return $(this.$el.closest(selector))
   }
 
   getCoords() {
-    return this.$element.getBoundingClientRect()
+    return this.$el.getBoundingClientRect()
   }
 
   findAll(selector) {
-    return this.$element.querySelectorAll(selector)
-  }
-
-  find(selector) {
-    return $(this.$element.querySelector(selector))
-  }
-
-  setClass(className) {
-    this.$element.classList.add(className)
-    return this
-  }
-
-  removeClass(className) {
-    this.$element.classList.remove(className)
-    return this
+    return this.$el.querySelectorAll(selector)
   }
 
   css(styles = {}) {
     Object.keys(styles).forEach(key => {
-      this.$element.style[key] = styles[key]
+      this.$el.style[key] = styles[key]
     })
+  }
+
+  getStyles(styles = []) {
+    return styles.reduce((res, s) => {
+      res[s] = this.$el.style[s]
+      return res
+    }, {})
   }
 
   id(parse) {
     if (parse) {
-      const id = this.id()
-      const parse = id.split(':')
+      const parsed = this.id().split(':')
       return {
-        row: +parse[0],
-        col: +parse[1],
+        row: +parsed[0],
+        col: +parsed[1],
       }
     }
     return this.data.id
   }
 
   focus() {
-    this.$element.focus()
+    this.$el.focus()
     return this
   }
 
-  text(text) {
-    if (typeof text === 'string') {
-      this.$element.textContent = text
+  attr(name, value) {
+    if (value) {
+      this.$el.setAttribute(name, value)
       return this
     }
-    if (this.$element.tagName.toUpperCase() === 'input') {
-      return this.$element.value.trim()
-    }
-    return this.$element.textContent.trim()
+    return this.$el.getAttribute(name)
+  }
+
+  addClass(className) {
+    this.$el.classList.add(className)
+    return this
+  }
+
+  removeClass(className) {
+    this.$el.classList.remove(className)
+    return this
   }
 }
 
@@ -107,10 +124,9 @@ export function $(selector) {
 }
 
 $.create = (tagName, classes = '') => {
-  const element = document.createElement(tagName)
+  const el = document.createElement(tagName)
   if (classes) {
-    element.classList.add(classes)
+    el.classList.add(classes)
   }
-  return $(element)
+  return $(el)
 }
-
